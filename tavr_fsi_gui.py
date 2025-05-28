@@ -21,6 +21,7 @@ from PyQt5.QtGui import *
 # 医学图像处理
 import SimpleITK as sitk
 import vtk
+import time
 from vtkmodules.util import numpy_support
 from vtk.qt.QVTKRenderWindowInteractor import QVTKRenderWindowInteractor
 
@@ -514,8 +515,8 @@ class TAVRAnalysisGUI(QMainWindow):
             
             # 步骤3: 简化网格
             progress.setValue(60)
-            target_faces = int(len(mesh.faces) * 0.1)  # 简化到10%
-            mesh = mesh.simplify_quadric_decimation(target_faces)
+            target_reduction = 0.1
+            mesh = mesh.simplify_quadric_decimation(target_reduction)
             
             # 步骤4: 平滑网格
             progress.setValue(80)
@@ -743,7 +744,7 @@ class TAVRAnalysisGUI(QMainWindow):
     def showAbout(self):
         """显示关于对话框"""
         QMessageBox.about(self, "关于",
-            "TAVR术前流固耦合分析系统 v1.0\n\n"
+            "以心医疗医学部专用 TAVR术前流固耦合分析系统 v1.0\n\n"
             "用于经导管主动脉瓣置换术的\n"
             "术前评估和手术规划\n\n"
             "© 2024 医学影像分析实验室")
@@ -1054,7 +1055,7 @@ class Reconstruction3DWidget(QWidget):
         vtk_image.AllocateScalars(vtk.VTK_SHORT, 1)
         
         # 复制数据
-        vtk_array = vtk.util.numpy_support.numpy_to_vtk(converter.ravel(), deep=True, array_type=vtk.VTK_SHORT)
+        vtk_array = numpy_support.numpy_to_vtk(converter.ravel(), deep=True, array_type=vtk.VTK_SHORT)
         vtk_image.GetPointData().SetScalars(vtk_array)
         
         # 创建体绘制映射器
