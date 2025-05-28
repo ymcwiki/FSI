@@ -21,6 +21,7 @@ from PyQt5.QtGui import *
 # 医学图像处理
 import SimpleITK as sitk
 import vtk
+from vtkmodules.util import numpy_support
 from vtk.qt.QVTKRenderWindowInteractor import QVTKRenderWindowInteractor
 
 # 科学计算
@@ -1102,7 +1103,7 @@ class Reconstruction3DWidget(QWidget):
         vtk_image.AllocateScalars(vtk.VTK_UNSIGNED_CHAR, 1)
         
         # 复制数据
-        vtk_array = vtk.util.numpy_support.numpy_to_vtk(converter.ravel(), deep=True, array_type=vtk.VTK_UNSIGNED_CHAR)
+        vtk_array = numpy_support.numpy_to_vtk(converter.ravel(), deep=True, array_type=vtk.VTK_UNSIGNED_CHAR)
         vtk_image.GetPointData().SetScalars(vtk_array)
         
         # 创建等值面
